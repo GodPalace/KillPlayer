@@ -52,8 +52,6 @@ int main() {
                         if (handle != NULL) {
                             TerminateProcess(handle, 0);
                             CloseHandle(handle);
-
-                            MessageBox(NULL, TEXT("检测到你正在玩游戏，已自动关闭游戏进程。"), TEXT("提示"), MB_OK);
                         }
                     }
                 }
