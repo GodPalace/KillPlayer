@@ -43,17 +43,21 @@ vector<ProcessInfo> ListProcessesInfo() {
 int main() {
     while (true) {
         vector<ProcessInfo> pids = ListProcessesInfo();
-        for (int i = 0; i < pids.size(); i++) {
-            if (pids[i].pid != 0) {
-                string name = pids[i].name;
+        for (const auto& process : pids) {
+            if (process.pid != 0) {
+                string name = process.name;
                 for (int j = 0; j < sizeof(games) / sizeof(games[0]); j++) {
-                    if (ToLowerCase(name).find(ToLowerCase(games[j])) != string::npos) {
-                        HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, TRUE, pids[i].pid);
-                        if (handle != NULL) {
-                            TerminateProcess(handle, 0);
-                            CloseHandle(handle);
+                    cout << "KillPlayer [INFO] : checking process[" << process.name << "][" << process.pid << "]" << endl;
 
-                            MessageBox(NULL, TEXT("检测到你正在玩游戏，已自动关闭游戏进程。"), TEXT("提示"), MB_OK);
+                    if (ToLowerCase(name).find(ToLowerCase(games[j])) != string::npos) {
+                        cout << "KillPlayer [INFO] : found a process" << endl;
+                        HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, TRUE, process.pid);
+                        if (handle != nullptr) {
+                            TerminateProcess(handle, 0);
+                            cout << "KillPlayer [INFO] : successful kill process[" << process.pid << "]"  << endl;
+                            CloseHandle(handle);
+                        } else {
+                            cerr << "KillPlayer [ERROR] : Cannot kill process" << endl;
                         }
                     }
                 }
